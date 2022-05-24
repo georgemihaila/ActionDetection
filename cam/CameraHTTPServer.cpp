@@ -1,4 +1,4 @@
-#include "ConfigurationServer.h"
+#include "CameraHTTPServer.h"
 
 WebServer *_server;
 Camera *_csCam;
@@ -30,7 +30,7 @@ void handleGetFrame() // AsyncWebServerRequest *request)
     _csCam->respondWithFrame(_server);
 }
 
-ConfigurationServer::ConfigurationServer(Config *config, Camera *camera, int port)
+CameraHTTPServer::CameraHTTPServer(Config *config, Camera *camera, int port)
 {
     _config = config;
     _server = new WebServer(port);
@@ -52,7 +52,7 @@ ConfigurationServer::ConfigurationServer(Config *config, Camera *camera, int por
     SSDP.begin();
 }
 
-void ConfigurationServer::handleClient()
+void CameraHTTPServer::handleClient()
 {
     _server->handleClient();
 }

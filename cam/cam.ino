@@ -1,13 +1,13 @@
 #include "WiFiService.h"
 #include "Config.h"
-#include "ConfigurationServer.h"
+#include "CameraHTTPServer.h"
 #include "Arduino.h"
 #include "Camera.h"
 
 WiFiService *_wifiService = new WiFiService();
 Config *_config = new Config();
 Camera *_camera;
-ConfigurationServer *_configServer;
+CameraHTTPServer *_cameraServer;
 
 void setup()
 {
@@ -15,11 +15,11 @@ void setup()
   while (!_wifiService->initWiFi(3))
     ;
   _camera = new Camera(_config);
-  _configServer = new ConfigurationServer(_config, _camera, 80);
+  _cameraServer = new CameraHTTPServer(_config, _camera, 80);
 }
 
 void loop()
 {
   _wifiService->makeSureWiFiConnectionUp();
-  _configServer->handleClient();
+  _cameraServer->handleClient();
 }

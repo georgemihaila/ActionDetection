@@ -1,5 +1,5 @@
-#ifndef ConfigurationServer_h_
-#define ConfigurationServer_h_
+#ifndef CameraHTTPServer_h_
+#define CameraHTTPServer_h_
 
 #include "Arduino.h"
 #include "Config.h"
@@ -8,10 +8,10 @@
 #include <ArduinoJson.h>
 #include "Camera.h"
 
-class ConfigurationServer
+class CameraHTTPServer
 {
 public:
-    ConfigurationServer(Config *config, Camera* camera, int port);
+    CameraHTTPServer(Config *config, Camera* camera, int port);
     void handleClient();
 
 private:
