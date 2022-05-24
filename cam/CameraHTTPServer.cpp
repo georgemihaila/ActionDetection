@@ -25,20 +25,35 @@ void handleSSDP()
     SSDP.schema(_server->client());
 }
 
-void handleGetFrame() // AsyncWebServerRequest *request)
+void handleGetUXGA()
 {
-    _csCam->respondWithFrame(_server);
+    _csCam->respondWithFrame(_server, FRAMESIZE_UXGA);
 }
 
-CameraHTTPServer::CameraHTTPServer(Config *config, Camera *camera, int port)
+void handleGetVGA()
 {
-    _config = config;
+    _csCam->respondWithFrame(_server, FRAMESIZE_VGA);
+}
+
+void handleGetQQVGA()
+{
+    _csCam->respondWithFrame(_server, FRAMESIZE_QQVGA);
+}
+
+CameraHTTPServer::CameraHTTPServer(Camera *camera, int port)
+{
     _server = new WebServer(port);
     _csCam = camera;
 
     _server->on("/description.xml", handleSSDP);
     _server->on("/capabilities", handleListCapabilities);
-    _server->on("/frame.jpg", handleGetFrame);
+    _server->on("/uxga.jpg", handleGetUXGA);
+    _server->on("/vga.jpg", handleGetVGA);
+     _server->on("/qqvga.jpg", handleGetQQVGA);
+    /*_server->on("/setResolution", HTTP_GET, [](AsyncWebServerRequest * request)
+    {
+
+    });*/
     _server->onNotFound(handle_NotFound);
     _server->begin();
 

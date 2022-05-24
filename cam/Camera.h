@@ -2,7 +2,6 @@
 #define Camera_h_
 
 #include "Arduino.h"
-#include "Config.h"
 #include "esp_camera.h"
 #include "esp_timer.h"
 #include "img_converters.h"
@@ -15,10 +14,8 @@
 class Camera
 {
 public:
-    Camera(Config *config);
-    void respondWithFrame(WebServer* server);
-private:
-    Config *_config;
+    Camera();
+    void respondWithFrame(WebServer *server, framesize_t resolution);
 };
 
 #endif

@@ -24,10 +24,8 @@ static const char *_STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" 
 static const char *_STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
 static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
-Camera::Camera(Config *camConfig)
+Camera::Camera()
 {
-    _config = camConfig;
-
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
@@ -53,7 +51,7 @@ Camera::Camera(Config *camConfig)
     if (psramFound())
     {
         config.frame_size = FRAMESIZE_UXGA;
-        config.jpeg_quality = _config->quality;
+        config.jpeg_quality = 10;
         config.fb_count = 2;
     }
     else
@@ -70,7 +68,7 @@ Camera::Camera(Config *camConfig)
     }
 }
 
-void Camera::respondWithFrame(WebServer *server)
+void Camera::respondWithFrame(WebServer *server, framesize_t resolution)
 {
     camera_fb_t *fb = NULL;
     esp_err_t res = ESP_OK;
