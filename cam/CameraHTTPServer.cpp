@@ -60,7 +60,6 @@ CameraHTTPServer::CameraHTTPServer(Camera *camera, int port)
     SSDP.setSchemaURL("description.xml");
     SSDP.setHTTPPort(80);
     SSDP.setName("ESP32-Cam");
-    SSDP.setSerialNumber("ff00ff11");
     SSDP.setModelName("ESP32 WiFi camera v0.1");
     SSDP.setModelNumber("ESP32CAMv0");
     SSDP.setDeviceType("upnp:rootdevice");
