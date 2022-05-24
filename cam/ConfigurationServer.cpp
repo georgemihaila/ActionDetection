@@ -1,36 +1,44 @@
 #include "ConfigurationServer.h"
-WebServer* _server;
+
+WebServer *_server;
+Camera *_csCam;
 
 void handleListCapabilities()
 {
-  const size_t capacity = JSON_ARRAY_SIZE(1);
-  DynamicJsonDocument doc(capacity);
-  doc.add("camera");
-  doc.add("frame");
-  String result;
-  serializeJson(doc, result);
-  _server->setContentLength(result.length());
-  _server->send(200, "application/json", result);
+    const size_t capacity = JSON_ARRAY_SIZE(1);
+    DynamicJsonDocument doc(capacity);
+    doc.add("camera");
+    doc.add("frame");
+    String result;
+    serializeJson(doc, result);
+    _server->setContentLength(result.length());
+    _server->send(200, "application/json", result);
 }
 
 void handle_NotFound()
 {
-  _server->send(404, "text/plain", "Not found");
+    _server->send(404, "text/plain", "Not found");
 }
 
 void handleSSDP()
 {
-  SSDP.schema(_server->client());
+    SSDP.schema(_server->client());
 }
 
-ConfigurationServer::ConfigurationServer(Config *config, int port)
+void handleGetFrame() // AsyncWebServerRequest *request)
+{
+    _csCam->respondWithFrame(_server);
+}
+
+ConfigurationServer::ConfigurationServer(Config *config, Camera *camera, int port)
 {
     _config = config;
     _server = new WebServer(port);
+    _csCam = camera;
 
     _server->on("/description.xml", handleSSDP);
     _server->on("/capabilities", handleListCapabilities);
-    //_server->on("/frame", getFrame);
+    _server->on("/frame.jpg", handleGetFrame);
     _server->onNotFound(handle_NotFound);
     _server->begin();
 

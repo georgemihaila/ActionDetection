@@ -8,7 +8,7 @@ class Config
 public:
     int frameWidth = 1600;
     int frameHeight = 1200;
-    int quality = 100;
+    int quality = 10;
 };
 
 #endif

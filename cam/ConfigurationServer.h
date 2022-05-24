@@ -6,11 +6,12 @@
 #include "WebServer.h"
 #include "ESP32SSDP.h"
 #include <ArduinoJson.h>
+#include "Camera.h"
 
 class ConfigurationServer
 {
 public:
-    ConfigurationServer(Config *config, int port);
+    ConfigurationServer(Config *config, Camera* camera, int port);
     void handleClient();
 
 private:
