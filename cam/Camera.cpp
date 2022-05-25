@@ -111,7 +111,9 @@ void Camera::respondWithFrame(WebServer *server, framesize_t resolution)
 
     // size_t hlen = snprintf((char *)part_buf, 64, _STREAM_PART, _jpg_buf_len);
     // server->sendContent((const char *)part_buf, hlen);
-    // server->sendHeader("Content-Type", "image/jpeg");
+    server->setContentLength(_jpg_buf_len);
+    server->sendHeader("Content-Type", "image/jpeg");
+    server->send(200);
     server->sendContent((const char *)_jpg_buf, _jpg_buf_len);
     if (fb)
     {
