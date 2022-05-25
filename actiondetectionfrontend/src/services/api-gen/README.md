@@ -102,6 +102,10 @@ var ActionDetectionApi = require('action_detection_api');
 
 
 var api = new ActionDetectionApi.CameraApi()
+var opts = {
+  'cameraIP': "cameraIP_example", // {String} 
+  'imageSize': new ActionDetectionApi.ImageSize() // {ImageSize} 
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -109,7 +113,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.cameraListGet(callback);
+api.cameraDetectObjectsInCameraViewGet(opts, callback);
 
 ```
 
@@ -119,11 +123,16 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*ActionDetectionApi.CameraApi* | [**cameraDetectObjectsInCameraViewGet**](docs/CameraApi.md#cameraDetectObjectsInCameraViewGet) | **GET** /Camera/DetectObjectsInCameraView | 
+*ActionDetectionApi.CameraApi* | [**cameraGetDetectionImageGet**](docs/CameraApi.md#cameraGetDetectionImageGet) | **GET** /Camera/GetDetectionImage | 
 *ActionDetectionApi.CameraApi* | [**cameraListGet**](docs/CameraApi.md#cameraListGet) | **GET** /Camera/List | 
 
 
 ## Documentation for Models
 
+ - [ActionDetectionApi.DetectedObject](docs/DetectedObject.md)
+ - [ActionDetectionApi.ImageSize](docs/ImageSize.md)
+ - [ActionDetectionApi.ObjectDetectionResponse](docs/ObjectDetectionResponse.md)
 
 
 ## Documentation for Authorization

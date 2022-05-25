@@ -13,6 +13,9 @@
 
 
 import ApiClient from './ApiClient';
+import DetectedObject from './model/DetectedObject';
+import ImageSize from './model/ImageSize';
+import ObjectDetectionResponse from './model/ObjectDetectionResponse';
 import CameraApi from './api/CameraApi';
 
 
@@ -53,6 +56,24 @@ export {
      * @property {module:ApiClient}
      */
     ApiClient,
+
+    /**
+     * The DetectedObject model constructor.
+     * @property {module:model/DetectedObject}
+     */
+    DetectedObject,
+
+    /**
+     * The ImageSize model constructor.
+     * @property {module:model/ImageSize}
+     */
+    ImageSize,
+
+    /**
+     * The ObjectDetectionResponse model constructor.
+     * @property {module:model/ObjectDetectionResponse}
+     */
+    ObjectDetectionResponse,
 
     /**
     * The CameraApi service constructor.

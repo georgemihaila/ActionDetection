@@ -42,7 +42,127 @@
           }
         }
       }
+    },
+    "/Camera/DetectObjectsInCameraView": {
+      "get": {
+        "tags": [
+          "Camera"
+        ],
+        "parameters": [
+          {
+            "name": "cameraIP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageSize",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ImageSize"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectDetectionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectDetectionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectDetectionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Camera/GetDetectionImage": {
+      "get": {
+        "tags": [
+          "Camera"
+        ],
+        "parameters": [
+          {
+            "name": "cameraIP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageSize",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ImageSize"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
-  "components": { }
+  "components": {
+    "schemas": {
+      "DetectedObject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "percentage_probability": {
+            "type": "number",
+            "format": "float"
+          },
+          "box_points": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImageSize": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ObjectDetectionResponse": {
+        "type": "object",
+        "properties": {
+          "detectedObjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetectedObject"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
 }

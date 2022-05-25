@@ -1,3 +1,4 @@
+using ActionDetection.API.Infrastructure.Extensions;
 using ActionDetection.API.Infrastructure.ObjectDetection;
 
 using Microsoft.AspNetCore.Mvc;
@@ -45,17 +46,7 @@ namespace ActionDetection.API.Controllers
                     bmp.SetPixel(x, y, Color.FromArgb(255, p[0], p[1], p[2]));
                 }
             }
-            return File(ImageToByteArray(bmp), "image/jpeg");
-        }
-
-        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
-        {
-
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                return ms.ToArray();
-            }
+            return File(bmp.ToByteArray(), "image/jpeg");
         }
     }
 } 

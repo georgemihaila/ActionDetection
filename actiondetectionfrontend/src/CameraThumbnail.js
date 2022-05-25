@@ -13,10 +13,16 @@ export default class CameraThumbnail extends Component {
 
     }
 
+    requestRunning = false;
+
     componentDidMount() {
-        setInterval((() => {
-            this.setState({ source: `${this.state.name}/vga.jpg?ts=${Date.now()}` });
-        }).bind(this), 1000);
+        //setInterval((() => {
+            if (!this.requestRunning) {
+                //this.setState({ source: `${this.state.name}/vga.jpg?ts=${Date.now()}` });
+                //http://localhost:5219/Camera/GetDetectionImage?cameraIP=10.10.0.138&imageSize=2
+                this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
+            }
+        //}).bind(this), 1000);
     }
 
     componentDidUpdate(state, props) {
@@ -30,15 +36,15 @@ export default class CameraThumbnail extends Component {
 
     render() {
         return <>
-        <div className={"img-container"}>
-            <img className="img-fluid"
-                width={400}
-                src={this.state.source}
-                alt={this.state.name} />
-            <div className={"top-left"}>
-                {this.state.name}
+            <div className={"img-container"}>
+                <img className="img-fluid"
+                    width={400}
+                    src={this.state.source}
+                    alt={this.state.name} />
+                <div className={"top-left"}>
+                    {this.state.name}
+                </div>
             </div>
-        </div>
         </>;
     }
 }

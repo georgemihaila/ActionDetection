@@ -13,6 +13,8 @@
 
 
 import ApiClient from "../ApiClient";
+import ImageSize from '../model/ImageSize';
+import ObjectDetectionResponse from '../model/ObjectDetectionResponse';
 
 /**
 * Camera service.
@@ -32,6 +34,87 @@ export default class CameraApi {
         this.apiClient = apiClient || ApiClient.instance;
     }
 
+
+    /**
+     * Callback function to receive the result of the cameraDetectObjectsInCameraViewGet operation.
+     * @callback module:api/CameraApi~cameraDetectObjectsInCameraViewGetCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/ObjectDetectionResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.cameraIP 
+     * @param {module:model/ImageSize} opts.imageSize 
+     * @param {module:api/CameraApi~cameraDetectObjectsInCameraViewGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/ObjectDetectionResponse}
+     */
+    cameraDetectObjectsInCameraViewGet(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'cameraIP': opts['cameraIP'],
+        'imageSize': opts['imageSize']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = ObjectDetectionResponse;
+      return this.apiClient.callApi(
+        '/Camera/DetectObjectsInCameraView', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
+     * Callback function to receive the result of the cameraGetDetectionImageGet operation.
+     * @callback module:api/CameraApi~cameraGetDetectionImageGetCallback
+     * @param {String} error Error message, if any.
+     * @param data This operation does not return a value.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.cameraIP 
+     * @param {module:model/ImageSize} opts.imageSize 
+     * @param {module:api/CameraApi~cameraGetDetectionImageGetCallback} callback The callback function, accepting three arguments: error, data, response
+     */
+    cameraGetDetectionImageGet(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'cameraIP': opts['cameraIP'],
+        'imageSize': opts['imageSize']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = [];
+      let returnType = null;
+      return this.apiClient.callApi(
+        '/Camera/GetDetectionImage', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
 
     /**
      * Callback function to receive the result of the cameraListGet operation.
