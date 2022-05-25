@@ -8,21 +8,30 @@ export default class CameraThumbnail extends Component {
 
         this.state = {
             name: props.name,
-            source: `${props.name}/vga.jpg`
+            source: `${props.name}/vga.jpg`,
+            detectedObjects: []
         };
 
     }
 
-    requestRunning = false;
+    objectDetectionRunning = false;
 
     componentDidMount() {
-        //setInterval((() => {
-            if (!this.requestRunning) {
-                //this.setState({ source: `${this.state.name}/vga.jpg?ts=${Date.now()}` });
-                //http://localhost:5219/Camera/GetDetectionImage?cameraIP=10.10.0.138&imageSize=2
-                this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
+        setInterval((() => {
+            this.setState({ source: `${this.state.name}/vga.jpg?ts=${Date.now()}` });
+
+            //this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
+        }).bind(this), 1000);
+        setInterval((() => {
+            if (!this.objectDetectionRunning) {
+                this.objectDetectionRunning = true;
+                globalCameraAPI.cameraDetectObjectsInCameraViewGet({ cameraIP: this.state.name.replace('http://', ''), imageSize: 2 }, (err, data, res) => {
+                    //console.log(data);
+                    this.setState({ detectedObjects: data.detectedObjects });
+                    this.objectDetectionRunning = false;
+                });
             }
-        //}).bind(this), 1000);
+        }).bind(this), 1000);
     }
 
     componentDidUpdate(state, props) {
@@ -43,7 +52,11 @@ export default class CameraThumbnail extends Component {
                     alt={this.state.name} />
                 <div className={"top-left"}>
                     {this.state.name}
+                    <p className={'bottom-left'}>
+                        {[...new Set(this.state.detectedObjects.map(x => x.name))].join('\n')}
+                    </p>
                 </div>
+
             </div>
         </>;
     }

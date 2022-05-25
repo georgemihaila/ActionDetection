@@ -48,11 +48,17 @@
   position: relative;
   text-align: center;
   color: white;
+  flex-direction: row;
 }
 
 .top-left {
   position: absolute;
   top: 8px;
   left: 16px;
+  font-size: 16px;
+}
+
+.bottom-left {
+  position: absolute;
   font-size: 16px;
 }
