@@ -30,9 +30,15 @@ export default class CameraThumbnail extends Component {
 
     render() {
         return <>
+        <div className={"img-container"}>
             <img className="img-fluid"
+                width={400}
                 src={this.state.source}
                 alt={this.state.name} />
+            <div className={"top-left"}>
+                {this.state.name}
+            </div>
+        </div>
         </>;
     }
 }

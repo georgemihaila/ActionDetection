@@ -32,13 +32,27 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-.thumbnail-container{
+.thumbnail-container {
   background-color: #394868;
   width: 200px;
   height: 200px;
+}
+
+.img-container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.top-left {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-size: 16px;
 }
