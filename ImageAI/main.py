@@ -23,7 +23,7 @@ def getImageFromDetection(detector, image, outFile):
 def getJSONFromDetection(detector, image, outFile):
     detections = detector.detectObjectsFromImage(input_image=image, input_type="array", output_image_path='/dev/null/img.jpg', minimum_percentage_probability=20)
     return json.dumps(detections)
-
+    
 import sys
 import cgi
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -76,7 +76,9 @@ class PythonServer(SimpleHTTPRequestHandler):
         #download_file(path, '/home/triton/Desktop/image detection/', filename, path)
         image_numpy = skimage.io.imread(path)
         detection_result = detection_method(accurate_detector, image_numpy, "accurate.jpg")
-        self.send_response(200, "OK")
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
         if return_type == "json":
             self.wfile.write(bytes(detection_result, "utf-8"))
         else:
@@ -87,7 +89,7 @@ class PythonServer(SimpleHTTPRequestHandler):
             #self.send_header("Content-Type", "image/jpeg")
             #self.end_headers()
             #self.wfile.write(bytes(image_to_byte_array(img)))
-        self.end_headers()
+            
 if __name__ == "__main__":
     server = HTTPServer((HOST_NAME, PORT), PythonServer)
     print(f"Server started http://{HOST_NAME}:{PORT}")

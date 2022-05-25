@@ -2,7 +2,7 @@
 
 namespace ActionDetection.API.Infrastructure.ObjectDetection
 {
-    public class ObjectDetectionService
+    public class ObjectDetectionService : IObjectDetectionService
     {
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
@@ -23,6 +23,18 @@ namespace ActionDetection.API.Infrastructure.ObjectDetection
             return new ObjectDetectionResponse()
             {
                 DetectedObjects = obj
+            };
+#pragma warning restore CS8603 // Possible null reference return.
+        }
+
+        public async Task<ImageDetectionResponse> GetDetectionImageAsync(string cameraIP, ImageSize imageSize)
+        {
+#pragma warning disable CS8603 // Possible null reference return.
+            var responseString = await _httpClient.GetStringAsync($"{_baseURL}?ip={cameraIP}&size={imageSize.ToString().ToLower()}&type=image");
+            var obj = JsonConvert.DeserializeObject<int[][][]>(responseString);
+            return new ImageDetectionResponse()
+            {
+                Pixels = obj
             };
 #pragma warning restore CS8603 // Possible null reference return.
         }
