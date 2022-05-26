@@ -37,17 +37,17 @@ export default class FloatingSettingsBar extends Component {
         return <>
             <div className={"float-bottom"}>
                 <Typography id="input-slider" gutterBottom>
-                    Motion detection chunks
+                    Chunk size
                 </Typography>
                 <Slider
                     aria-label="Motion chunks"
-                    defaultValue={64}
+                    defaultValue={16}
                     getAriaValueText={this.valuetext}
                     valueLabelDisplay="auto"
                     step={10}
                     marks
                     min={4}
-                    max={128}
+                    max={64}
                     width={100}
                     onChange={this.motionDetectionSliderChanged.bind(this)}
                 />

@@ -9,7 +9,7 @@ export default class CameraList extends Component {
 
         this.state = {
             cameras: [],
-            motionDetectionChunks: 64
+            motionDetectionChunks: 16
         };
     }
 
