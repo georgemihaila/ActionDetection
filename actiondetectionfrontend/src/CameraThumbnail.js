@@ -9,7 +9,8 @@ export default class CameraThumbnail extends Component {
         this.state = {
             name: props.name,
             source: `${apiAddress}/Camera/GetFrame?cameraIP=${props.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}`,
-            detectedObjects: []
+            detectedObjects: [],
+            motionDetectionChunks: props.motionDetectionChunks
         };
 
     }
@@ -18,7 +19,7 @@ export default class CameraThumbnail extends Component {
 
     componentDidMount() {
         setInterval((() => {
-            this.setState({ source: `${apiAddress}/Camera/GetFrame?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}` });
+            this.setState({ source: `${apiAddress}/Camera/GetFrame?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}&chunks=` + this.state.motionDetectionChunks });
 
             //this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
         }).bind(this), 1000);
@@ -40,7 +41,10 @@ export default class CameraThumbnail extends Component {
             return;
 
         if (this.props.name !== props.name) {
-            this.setState({ name: this.props });
+            this.setState({ name: this.props.name });
+        }
+        if (this.state.motionDetectionChunks !== this.props.motionDetectionChunks) {
+            this.setState({ motionDetectionChunks: this.props.motionDetectionChunks });
         }
     }
 

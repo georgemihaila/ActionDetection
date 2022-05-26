@@ -62,3 +62,12 @@
   position: absolute;
   font-size: 16px;
 }
+
+.float-bottom{
+  position:absolute;
+  bottom: 0px;
+  width: 200px;
+  position: fixed;
+  border-radius: 10px;
+  background-color: rgba(20, 0, 10, 0.5);
+}

@@ -32,7 +32,7 @@ namespace ActionDetection.API.Controllers
                                                   ImageSize imageSize,
                                                   int sensitivity = 7,
                                                   bool showMotion = true,
-                                                  int chunks = 16)
+                                                  int chunks = 64)
         {
             var camera = _cameras.FirstByIPAddress(cameraIP);
             var bitmap = default(Image);

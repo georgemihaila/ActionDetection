@@ -17,6 +17,7 @@ import DetectedObject from './model/DetectedObject';
 import ImageSize from './model/ImageSize';
 import ObjectDetectionResponse from './model/ObjectDetectionResponse';
 import CameraApi from './api/CameraApi';
+import ObjectDetectionApi from './api/ObjectDetectionApi';
 
 
 /**
@@ -79,5 +80,11 @@ export {
     * The CameraApi service constructor.
     * @property {module:api/CameraApi}
     */
-    CameraApi
+    CameraApi,
+
+    /**
+    * The ObjectDetectionApi service constructor.
+    * @property {module:api/ObjectDetectionApi}
+    */
+    ObjectDetectionApi
 };

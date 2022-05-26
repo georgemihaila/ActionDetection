@@ -104,16 +104,19 @@ var ActionDetectionApi = require('action_detection_api');
 var api = new ActionDetectionApi.CameraApi()
 var opts = {
   'cameraIP': "cameraIP_example", // {String} 
-  'imageSize': new ActionDetectionApi.ImageSize() // {ImageSize} 
+  'imageSize': new ActionDetectionApi.ImageSize(), // {ImageSize} 
+  'sensitivity': 7, // {Number} 
+  'showMotion': true, // {Boolean} 
+  'chunks': 64 // {Number} 
 };
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
   } else {
-    console.log('API called successfully. Returned data: ' + data);
+    console.log('API called successfully.');
   }
 };
-api.cameraDetectObjectsInCameraViewGet(opts, callback);
+api.cameraGetFrameGet(opts, callback);
 
 ```
 
@@ -123,10 +126,10 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ActionDetectionApi.CameraApi* | [**cameraDetectObjectsInCameraViewGet**](docs/CameraApi.md#cameraDetectObjectsInCameraViewGet) | **GET** /Camera/DetectObjectsInCameraView | 
-*ActionDetectionApi.CameraApi* | [**cameraGetDetectionImageGet**](docs/CameraApi.md#cameraGetDetectionImageGet) | **GET** /Camera/GetDetectionImage | 
 *ActionDetectionApi.CameraApi* | [**cameraGetFrameGet**](docs/CameraApi.md#cameraGetFrameGet) | **GET** /Camera/GetFrame | 
 *ActionDetectionApi.CameraApi* | [**cameraListGet**](docs/CameraApi.md#cameraListGet) | **GET** /Camera/List | 
+*ActionDetectionApi.ObjectDetectionApi* | [**objectDetectionDetectObjectsInCameraViewGet**](docs/ObjectDetectionApi.md#objectDetectionDetectObjectsInCameraViewGet) | **GET** /ObjectDetection/DetectObjectsInCameraView | 
+*ActionDetectionApi.ObjectDetectionApi* | [**objectDetectionGetDetectionImageGet**](docs/ObjectDetectionApi.md#objectDetectionGetDetectionImageGet) | **GET** /ObjectDetection/GetDetectionImage | 
 
 
 ## Documentation for Models

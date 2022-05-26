@@ -43,10 +43,64 @@
         }
       }
     },
-    "/Camera/DetectObjectsInCameraView": {
+    "/Camera/GetFrame": {
       "get": {
         "tags": [
           "Camera"
+        ],
+        "parameters": [
+          {
+            "name": "cameraIP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageSize",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ImageSize"
+            }
+          },
+          {
+            "name": "sensitivity",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          },
+          {
+            "name": "showMotion",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "chunks",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 64
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/ObjectDetection/DetectObjectsInCameraView": {
+      "get": {
+        "tags": [
+          "ObjectDetection"
         ],
         "parameters": [
           {
@@ -88,38 +142,10 @@
         }
       }
     },
-    "/Camera/GetDetectionImage": {
+    "/ObjectDetection/GetDetectionImage": {
       "get": {
         "tags": [
-          "Camera"
-        ],
-        "parameters": [
-          {
-            "name": "cameraIP",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "imageSize",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ImageSize"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/Camera/GetFrame": {
-      "get": {
-        "tags": [
-          "Camera"
+          "ObjectDetection"
         ],
         "parameters": [
           {

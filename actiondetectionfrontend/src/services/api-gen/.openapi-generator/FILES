@@ -5,13 +5,16 @@ README.md
 docs/CameraApi.md
 docs/DetectedObject.md
 docs/ImageSize.md
+docs/ObjectDetectionApi.md
 docs/ObjectDetectionResponse.md
 git_push.sh
 mocha.opts
 package.json
 src/ApiClient.js
 src/api/CameraApi.js
+src/api/ObjectDetectionApi.js
 src/index.js
 src/model/DetectedObject.js
 src/model/ImageSize.js
 src/model/ObjectDetectionResponse.js
+test/api/ObjectDetectionApi.spec.js

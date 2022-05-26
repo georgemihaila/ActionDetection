@@ -1,14 +1,15 @@
 import { React, Component } from "react";
 import {globalCameraAPI} from "./services/globals"
 import CameraThumbnail from "./CameraThumbnail";
-
+import FloatingSettingsBar from "./FloatingSettingsBar";
 export default class CameraList extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            cameras: []
+            cameras: [],
+            motionDetectionChunks: 64
         };
     }
 
@@ -20,9 +21,14 @@ export default class CameraList extends Component {
         });
     }
 
+    motionDetectionSliderChanged(v){
+        this.setState({motionDetectionChunks: v});
+    }
+
     render() {
         return <>
-            {(this.state?.cameras?.length == 0) ? "No cameras online" : this.state?.cameras?.map(x => <CameraThumbnail key={x} name={x} />)}
+            {(this.state?.cameras?.length == 0) ? "No cameras online" : this.state?.cameras?.map(x => <CameraThumbnail motionDetectionChunks={this.state.motionDetectionChunks} key={x} name={x} />)}
+            <FloatingSettingsBar onMotionDetectionSliderChanged={this.motionDetectionSliderChanged.bind(this)}/>
         </>;
     }
 }
