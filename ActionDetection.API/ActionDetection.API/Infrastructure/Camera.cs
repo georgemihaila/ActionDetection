@@ -1,17 +1,21 @@
-﻿using ActionDetection.API.Infrastructure.ObjectDetection;
+﻿using ActionDetection.API.Infrastructure.Extensions;
+using ActionDetection.API.Infrastructure.ObjectDetection;
 
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace ActionDetection.API.Infrastructure
 {
     public class Camera
     {
-        public string IPAddress { get;private set; }
+        public string IPAddress { get; private set; }
         public int MaxFrameRate { get; set; } = 1;
 
         private readonly HttpClient _httpClient = new();
-        private Image _lastImage;
-        private DateTime _lastFrameTime = DateTime.MinValue;
+        private Image? _currentFrame;
+        private Image? _lastFrame;
+        private DateTime _lastGetFrameTime = DateTime.MinValue;
         private bool _loadActive = false;
 
         public Camera(string ipAddress)
@@ -21,14 +25,17 @@ namespace ActionDetection.API.Infrastructure
 
         public async Task<Image> GetFrameAsync(ImageSize imageSize)
         {
-            if ((DateTime.Now - _lastFrameTime).TotalSeconds > 1 / MaxFrameRate && !_loadActive)
+            if ((DateTime.Now - _lastGetFrameTime).TotalSeconds > 1 / MaxFrameRate && !_loadActive)
             {
-                _lastFrameTime = DateTime.Now;
+                _lastGetFrameTime = DateTime.Now;
                 _loadActive = true;
-                _lastImage = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg"));
+                _lastFrame = _currentFrame?.CloneAs<Rgb24>();
+                _currentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg"));
                 _loadActive = false;
             }
-            return _lastImage;
+            return _currentFrame;
         }
+
+        public Image GetLastFrame() => _lastFrame;
     }
 }

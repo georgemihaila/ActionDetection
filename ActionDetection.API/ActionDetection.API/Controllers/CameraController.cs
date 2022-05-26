@@ -15,9 +15,9 @@ namespace ActionDetection.API.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ObjectDetectionService _objectDetectionService;
-        private readonly IEnumerable<Camera> _cameras;
+        private readonly CameraCollection _cameras;
 
-        public CameraController(IConfiguration configuration, ObjectDetectionService objectDetectionService, IEnumerable<Camera> cameras)
+        public CameraController(IConfiguration configuration, ObjectDetectionService objectDetectionService, CameraCollection cameras)
         {
             _configuration = configuration;
             _objectDetectionService = objectDetectionService;
@@ -28,31 +28,18 @@ namespace ActionDetection.API.Controllers
         public IEnumerable<string> List() => _cameras.Select(x => x.IPAddress);
 
         [HttpGet]
-        public async Task<ObjectDetectionResponse> DetectObjectsInCameraViewAsync(string cameraIP, ImageSize imageSize)
+        public async Task<IActionResult> GetFrame(string cameraIP, ImageSize imageSize, int sensitivity = 1, bool showMotion = true)
         {
-            return await _objectDetectionService.DetectObjectsInCameraViewAsync(cameraIP, imageSize);
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetDetectionImageAsync(string cameraIP, ImageSize imageSize)
-        {
-            var image = await _objectDetectionService.GetDetectionImageAsync(cameraIP, imageSize);
-            Image<Rgba32> bmp = new(image.Pixels[0].Length, image.Pixels.Length);
-            for (int x = 0; x < bmp.Width; x++)
+            var camera = _cameras.FirstByIPAddress(cameraIP);
+            var bitmap = default(Image);
+            if (showMotion)
             {
-                for (int y = 0; y < bmp.Height; y++)
-                {
-                    var p = image.Pixels[y][x];
-                    bmp[x, y] = Color.FromRgba(255, (byte)p[0], (byte)p[1], (byte)p[2]);
-                }
+                bitmap = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity);
             }
-            return File(bmp.ToByteArray(), "image/jpeg");
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> GetFrame(string cameraIP, ImageSize imageSize)
-        {
-            var bitmap = await _cameras.FirstByIPAddress(cameraIP).GetFrameAsync(imageSize);
+            else
+            {
+                bitmap = await camera.GetFrameAsync(imageSize);
+            }
             return File(bitmap.ToByteArray(), "image/jpeg");
         }
     }

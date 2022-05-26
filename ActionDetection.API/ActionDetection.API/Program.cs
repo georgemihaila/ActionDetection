@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ObjectDetectionService>();
-var cameras = builder.Configuration.GetSection("Cameras").GetChildren().Select(x => new Camera(x.Value));
-builder.Services.AddSingleton(cameras);
+var cameras = builder.Configuration.GetSection("Cameras").GetChildren().Select(x => new Camera(x.Value)).ToArray();
+builder.Services.AddSingleton(new CameraCollection(cameras));
 var app = builder.Build();
 app.UseCors(x => x
                 .AllowAnyMethod()
