@@ -3,8 +3,7 @@ using ActionDetection.API.Infrastructure.ObjectDetection;
 
 using Microsoft.AspNetCore.Mvc;
 
-using System.Drawing;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
 
 namespace ActionDetection.API.Controllers
 {
@@ -33,12 +32,12 @@ namespace ActionDetection.API.Controllers
         {
             return await _objectDetectionService.DetectObjectsInCameraViewAsync(cameraIP, imageSize);
         }
-
+        /*
         [HttpGet]
         public async Task<IActionResult> GetDetectionImageAsync(string cameraIP, ImageSize imageSize)
         {
             var image = await _objectDetectionService.GetDetectionImageAsync(cameraIP, imageSize);
-            Bitmap bmp = new(image.Pixels[0].Length, image.Pixels.Length);
+            Image bmp = new(image.Pixels[0].Length, image.Pixels.Length);
             for (int x = 0; x < bmp.Width; x++)
             {
                 for (int y = 0; y < bmp.Height; y++)
@@ -49,12 +48,12 @@ namespace ActionDetection.API.Controllers
             }
             return File(bmp.ToByteArray(), "image/jpeg");
         }
-
+        */
         [HttpGet]
         public async Task<IActionResult> GetFrame(string cameraIP, ImageSize imageSize)
         {
-            //var bytes = await _httpClient.GetByteArrayAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg");
-            Bitmap bitmap = new Bitmap(await _httpClient.GetStreamAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg"));
+               //var bytes = await _httpClient.GetByteArrayAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg");
+            Image bitmap = Image.Load(await _httpClient.GetStreamAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg"));
             return File(bitmap.ToByteArray(), "image/jpeg");
         }
     }
