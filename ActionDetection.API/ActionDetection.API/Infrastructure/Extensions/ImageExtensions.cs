@@ -38,33 +38,46 @@ namespace ActionDetection.API.Infrastructure.Extensions
             return source;
         }
 
-        private static Image PrepareForMotionDetection(this Image source, int size = 16)
+        private static Image PrepareForMotionDetection(this Image source, int size)
         {
-            source = source.Resize(size, size);
+            source = source.CloneAs<Rgba32>().Resize(size, size);
             source.Mutate(x => x.Grayscale());
             return source;
         }
 
-        public static async Task<Image> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity)
+        public static async Task<Image> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity, int chunks)
         {
             var lastFrame = camera.GetLastFrame();
-            var frame = await camera.GetFrameAsync(imageSize);
+            var frame = (await camera.GetFrameAsync(imageSize)).CloneAs<Rgb24>();
+            Image<Rgba32> motionImage;
             if (lastFrame != null && frame != null)
             {
-                var c0 = frame.PrepareForMotionDetection().CloneAs<Rgb24>();
-                var c1 = lastFrame.PrepareForMotionDetection().CloneAs<Rgb24>();
-                Image<Rgba32> result = new(c0.Width, c0.Height);
-                for (int x = 0; x < c0.Width; x++)
+                var c0 = frame.PrepareForMotionDetection(chunks).CloneAs<Rgb24>();
+                var c1 = lastFrame.PrepareForMotionDetection(chunks).CloneAs<Rgb24>();
+                motionImage = new Image<Rgba32>(frame.Width, frame.Height);
+                var adjustedChunkWidth = motionImage.Width / chunks;
+                var adjustedChunkHeight= motionImage.Height / chunks;
+                for (int chunkX = 0; chunkX < c0.Width; chunkX++)
                 {
-                    for (int y = 0; y < c0.Height; y++)
+                    for (int chunkY = 0; chunkY < c0.Height; chunkY++)
                     {
-                        if (Math.Abs(c0[x, y].R - c1[x, y].R) > sensitivity)
+                        var motionDetected = Math.Abs(c0[chunkX, chunkY].R - c1[chunkX, chunkY].R) > sensitivity;
+                        var color = Color.Red;
+                        if (!motionDetected)
                         {
-                            result[x, y] = Color.Red;
+                            color = Color.Transparent;
+                        }
+                        for (int i = 0; i < motionImage.Width / chunks; i++)
+                        {
+                            for (int j = 0; j < motionImage.Height / chunks; j++)
+                            {
+                                motionImage[i + chunkX * adjustedChunkWidth, j + chunkY * adjustedChunkHeight] = color;
+                            }
                         }
                     }
                 }
-                return result;
+                //return motionImage;
+                frame.Mutate(x => x.DrawImage(motionImage, 0.2f));
             }
             return frame;
         }

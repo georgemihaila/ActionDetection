@@ -28,13 +28,17 @@ namespace ActionDetection.API.Controllers
         public IEnumerable<string> List() => _cameras.Select(x => x.IPAddress);
 
         [HttpGet]
-        public async Task<IActionResult> GetFrame(string cameraIP, ImageSize imageSize, int sensitivity = 1, bool showMotion = true)
+        public async Task<IActionResult> GetFrame(string cameraIP,
+                                                  ImageSize imageSize,
+                                                  int sensitivity = 7,
+                                                  bool showMotion = true,
+                                                  int chunks = 16)
         {
             var camera = _cameras.FirstByIPAddress(cameraIP);
             var bitmap = default(Image);
             if (showMotion)
             {
-                bitmap = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity);
+                bitmap = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity, chunks);
             }
             else
             {
