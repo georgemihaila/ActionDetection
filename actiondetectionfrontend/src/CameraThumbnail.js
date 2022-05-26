@@ -22,6 +22,7 @@ export default class CameraThumbnail extends Component {
 
             //this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
         }).bind(this), 1000);
+        return;
         setInterval((() => {
             if (!this.objectDetectionRunning) {
                 this.objectDetectionRunning = true;

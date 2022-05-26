@@ -37,7 +37,7 @@ namespace ActionDetection.API.Controllers
         public async Task<IActionResult> GetDetectionImageAsync(string cameraIP, ImageSize imageSize)
         {
             var image = await _objectDetectionService.GetDetectionImageAsync(cameraIP, imageSize);
-            Bitmap bmp = new Bitmap(image.Pixels[0].Length, image.Pixels.Length);
+            Bitmap bmp = new(image.Pixels[0].Length, image.Pixels.Length);
             for (int x = 0; x < bmp.Width; x++)
             {
                 for (int y = 0; y < bmp.Height; y++)

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 
-#pragma warning disable CS8603 // Possible null reference return.
 namespace ActionDetection.API.Infrastructure.ObjectDetection
 {
     public class ObjectDetectionService : IObjectDetectionService
@@ -81,5 +80,3 @@ namespace ActionDetection.API.Infrastructure.ObjectDetection
         }
     }
 }
-
-#pragma warning restore CS8603 // Possible null reference return.
