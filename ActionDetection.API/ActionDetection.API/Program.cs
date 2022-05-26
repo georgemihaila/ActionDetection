@@ -1,3 +1,4 @@
+using ActionDetection.API.Infrastructure;
 using ActionDetection.API.Infrastructure.ObjectDetection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ObjectDetectionService>();
+var cameras = builder.Configuration.GetSection("Cameras").GetChildren().Select(x => new Camera(x.Value));
+builder.Services.AddSingleton(cameras);
 var app = builder.Build();
 app.UseCors(x => x
                 .AllowAnyMethod()
@@ -26,4 +29,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run();   

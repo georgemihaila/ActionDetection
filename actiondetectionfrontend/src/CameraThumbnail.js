@@ -8,7 +8,7 @@ export default class CameraThumbnail extends Component {
 
         this.state = {
             name: props.name,
-            source: `${props.name}/vga.jpg`,
+            source: `${apiAddress}/Camera/GetFrame?cameraIP=${props.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}`,
             detectedObjects: []
         };
 
