@@ -125,6 +125,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ActionDetectionApi.CameraApi* | [**cameraDetectObjectsInCameraViewGet**](docs/CameraApi.md#cameraDetectObjectsInCameraViewGet) | **GET** /Camera/DetectObjectsInCameraView | 
 *ActionDetectionApi.CameraApi* | [**cameraGetDetectionImageGet**](docs/CameraApi.md#cameraGetDetectionImageGet) | **GET** /Camera/GetDetectionImage | 
+*ActionDetectionApi.CameraApi* | [**cameraGetFrameGet**](docs/CameraApi.md#cameraGetFrameGet) | **GET** /Camera/GetFrame | 
 *ActionDetectionApi.CameraApi* | [**cameraListGet**](docs/CameraApi.md#cameraListGet) | **GET** /Camera/List | 
 
 

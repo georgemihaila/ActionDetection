@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ActionDetection.API.Controllers.CameraController.GetDetectionImageAsync(System.String,ActionDetection.API.Infrastructure.ObjectDetection.ImageSize)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ActionDetection.API.Controllers.CameraController.GetFrame(System.String,ActionDetection.API.Infrastructure.ObjectDetection.ImageSize)~System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:ActionDetection.API.Infrastructure.Extensions.ImageExtensions.ToByteArray(System.Drawing.Image)~System.Byte[]")]

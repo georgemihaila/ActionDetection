@@ -1,5 +1,5 @@
 import { React, Component } from "react";
-import globalCameraAPI from "./services/globals"
+import {globalCameraAPI} from "./services/globals"
 import CameraThumbnail from "./CameraThumbnail";
 
 export default class CameraList extends Component {

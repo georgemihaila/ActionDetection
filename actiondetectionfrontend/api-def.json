@@ -115,6 +115,34 @@
           }
         }
       }
+    },
+    "/Camera/GetFrame": {
+      "get": {
+        "tags": [
+          "Camera"
+        ],
+        "parameters": [
+          {
+            "name": "cameraIP",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageSize",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ImageSize"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {

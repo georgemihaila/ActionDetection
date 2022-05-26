@@ -15,7 +15,3 @@ src/index.js
 src/model/DetectedObject.js
 src/model/ImageSize.js
 src/model/ObjectDetectionResponse.js
-test/api/CameraApi.spec.js
-test/model/DetectedObject.spec.js
-test/model/ImageSize.spec.js
-test/model/ObjectDetectionResponse.spec.js

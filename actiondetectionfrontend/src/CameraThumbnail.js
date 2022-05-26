@@ -1,5 +1,5 @@
 import { React, Component } from "react";
-import globalCameraAPI from "./services/globals"
+import { globalCameraAPI, apiAddress } from "./services/globals"
 
 export default class CameraThumbnail extends Component {
 
@@ -18,7 +18,7 @@ export default class CameraThumbnail extends Component {
 
     componentDidMount() {
         setInterval((() => {
-            this.setState({ source: `${this.state.name}/vga.jpg?ts=${Date.now()}` });
+            this.setState({ source: `${apiAddress}/Camera/GetFrame?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}` });
 
             //this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
         }).bind(this), 1000);

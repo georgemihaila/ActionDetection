@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**cameraDetectObjectsInCameraViewGet**](CameraApi.md#cameraDetectObjectsInCameraViewGet) | **GET** /Camera/DetectObjectsInCameraView | 
 [**cameraGetDetectionImageGet**](CameraApi.md#cameraGetDetectionImageGet) | **GET** /Camera/GetDetectionImage | 
+[**cameraGetFrameGet**](CameraApi.md#cameraGetFrameGet) | **GET** /Camera/GetFrame | 
 [**cameraListGet**](CameraApi.md#cameraListGet) | **GET** /Camera/List | 
 
 
@@ -74,6 +75,53 @@ let opts = {
   'imageSize': new ActionDetectionApi.ImageSize() // ImageSize | 
 };
 apiInstance.cameraGetDetectionImageGet(opts, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+});
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cameraIP** | **String**|  | [optional] 
+ **imageSize** | [**ImageSize**](.md)|  | [optional] 
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+
+## cameraGetFrameGet
+
+> cameraGetFrameGet(opts)
+
+
+
+### Example
+
+```javascript
+import ActionDetectionApi from 'action_detection_api';
+
+let apiInstance = new ActionDetectionApi.CameraApi();
+let opts = {
+  'cameraIP': "cameraIP_example", // String | 
+  'imageSize': new ActionDetectionApi.ImageSize() // ImageSize | 
+};
+apiInstance.cameraGetFrameGet(opts, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {

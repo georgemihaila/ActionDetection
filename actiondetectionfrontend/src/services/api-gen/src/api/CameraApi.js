@@ -117,6 +117,46 @@ export default class CameraApi {
     }
 
     /**
+     * Callback function to receive the result of the cameraGetFrameGet operation.
+     * @callback module:api/CameraApi~cameraGetFrameGetCallback
+     * @param {String} error Error message, if any.
+     * @param data This operation does not return a value.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.cameraIP 
+     * @param {module:model/ImageSize} opts.imageSize 
+     * @param {module:api/CameraApi~cameraGetFrameGetCallback} callback The callback function, accepting three arguments: error, data, response
+     */
+    cameraGetFrameGet(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'cameraIP': opts['cameraIP'],
+        'imageSize': opts['imageSize']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = [];
+      let returnType = null;
+      return this.apiClient.callApi(
+        '/Camera/GetFrame', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
      * Callback function to receive the result of the cameraListGet operation.
      * @callback module:api/CameraApi~cameraListGetCallback
      * @param {String} error Error message, if any.

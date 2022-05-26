@@ -14,6 +14,7 @@ namespace ActionDetection.API.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ObjectDetectionService _objectDetectionService;
+        private readonly HttpClient _httpClient = new();
 
         public CameraController(IConfiguration configuration, ObjectDetectionService objectDetectionService)
         {
@@ -48,5 +49,13 @@ namespace ActionDetection.API.Controllers
             }
             return File(bmp.ToByteArray(), "image/jpeg");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFrame(string cameraIP, ImageSize imageSize)
+        {
+            //var bytes = await _httpClient.GetByteArrayAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg");
+            Bitmap bitmap = new Bitmap(await _httpClient.GetStreamAsync($"http://{cameraIP}/{imageSize.ToString().ToLower()}.jpg"));
+            return File(bitmap.ToByteArray(), "image/jpeg");
+        }
     }
-} 
+}
