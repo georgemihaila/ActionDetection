@@ -5,35 +5,52 @@ export default class CameraThumbnail extends Component {
 
     constructor(props) {
         super(props);
-
+        let messageAlts = {
+            initial: props.name,
+            connecting: "Connecting to " + props.name + "...",
+            waitingForFrame: "Waiting for data from " + props.name + "..."
+        };
         this.state = {
             name: props.name,
-            source: `${apiAddress}/Camera/GetFrame?cameraIP=${props.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}`,
-            detectedObjects: [],
-            motionDetectionChunks: props.motionDetectionChunks
+            wsSource: `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${props.name.replace('http://', '')}&imageSize=0`,
+            motionDetectionChunks: props.motionDetectionChunks,
+            showIP: false,
+            messageAlts: messageAlts,
+            alt: messageAlts.initial,
+            frameData: []
         };
 
     }
 
-    objectDetectionRunning = false;
+    reopenWS() {
+        this.setState({ alt: this.state.messageAlts.connecting });
+        this.ws = new WebSocket(this.state.wsSource);
+        this.ws.onopen = this.handleWSOpened.bind(this);
+        this.ws.onmessage = this.handleWSMessage.bind(this);
+        this.ws.onclose = this.handleWSClosed.bind(this);
+    }
 
+    handleWSOpened(e) {
+        //console.log(this.state.name + ' ws opened');
+        if (this.alt !== this.state.messageAlts.waitingForFrame) {
+            this.setState({ alt: this.state.messageAlts.waitingForFrame });
+        }
+        this.ws.send(JSON.stringify({ data: 'open' }))
+    }
+
+    handleWSMessage(e) {
+        //console.log(e.data);
+        this.setState({frameData: e.data});
+    }
+
+    handleWSClosed(e) {
+        //console.log(this.state.name + ' ws closed');
+        this.reopenWS();
+    }
+
+    ws = {};
     componentDidMount() {
-        setInterval((() => {
-            this.setState({ source: `${apiAddress}/Camera/GetFrame?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0&ts=${Date.now()}&chunks=` + this.state.motionDetectionChunks });
-
-            //this.setState({ source: `http://localhost:5219/Camera/GetDetectionImage?cameraIP=${this.state.name.replace('http://', '')}&imageSize=2&ts=${Date.now()}` });
-        }).bind(this), 1000);
-        return;
-        setInterval((() => {
-            if (!this.objectDetectionRunning) {
-                this.objectDetectionRunning = true;
-                globalCameraAPI.cameraDetectObjectsInCameraViewGet({ cameraIP: this.state.name.replace('http://', ''), imageSize: 2 }, (err, data, res) => {
-                    //console.log(data);
-                    this.setState({ detectedObjects: data.detectedObjects });
-                    this.objectDetectionRunning = false;
-                });
-            }
-        }).bind(this), 1000);
+        this.reopenWS();
     }
 
     componentDidUpdate(state, props) {
@@ -49,19 +66,16 @@ export default class CameraThumbnail extends Component {
     }
 
     render() {
+        let ip = <div className={"top-left"}>
+            {this.state.name}
+        </div>;
         return <>
             <div className={"img-container"}>
                 <img className="img-fluid"
                     width={400}
-                    src={this.state.source}
-                    alt={this.state.name} />
-                <div className={"top-left"}>
-                    {this.state.name}
-                    <p className={'bottom-left'}>
-                        {[...new Set(this.state.detectedObjects.map(x => x.name))].join('\n')}
-                    </p>
-                </div>
-
+                    src={`data:image/jpeg;base64,${this.state.frameData}`}
+                    alt={this.state.alt} />
+                {(this.state.showIP ? ip : <></>)}
             </div>
         </>;
     }

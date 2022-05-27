@@ -10,7 +10,7 @@ namespace ActionDetection.API.Infrastructure
     public class Camera
     {
         public string IPAddress { get; private set; }
-        public int MaxFrameRate { get; set; } = 1;
+        public double MaxFrameRate { get; set; } = 3;
 
         private readonly HttpClient _httpClient = new();
         private Image? _currentFrame;

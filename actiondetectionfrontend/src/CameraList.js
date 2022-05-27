@@ -3,7 +3,6 @@ import {globalCameraAPI} from "./services/globals"
 import CameraThumbnail from "./CameraThumbnail";
 import FloatingSettingsBar from "./FloatingSettingsBar";
 export default class CameraList extends Component {
-
     constructor(props) {
         super(props);
 

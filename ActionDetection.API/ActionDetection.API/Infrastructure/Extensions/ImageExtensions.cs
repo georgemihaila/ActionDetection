@@ -77,7 +77,7 @@ namespace ActionDetection.API.Infrastructure.Extensions
                     }
                 }
                 //return motionImage;
-                frame.Mutate(x => x.DrawImage(motionImage, 0.2f));
+                frame.Mutate(x => x.DrawImage(motionImage, 0.3f));
             }
             return frame;
         }
