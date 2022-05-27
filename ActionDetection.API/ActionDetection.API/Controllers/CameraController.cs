@@ -76,22 +76,33 @@ namespace ActionDetection.API.Controllers
             var buffer = new byte[1024 * 4];
             try
             {
-                var receiveResult = await webSocket.ReceiveAsync(
-                        new ArraySegment<byte>(buffer), CancellationToken.None);
+                var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
+                var lastHeardFrom = DateTime.Now;
                 while (webSocket.State == WebSocketState.Open)
                 {
                     var frame = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity, chunks);
                     await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
                     await Task.Delay(500);
-                    //receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                    CancellationTokenSource source = new();
+                    source.CancelAfter(TimeSpan.FromSeconds(5));
+                    receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), source.Token);
+                    if (buffer?.Length > 0)
+                    {
+                        if (Encoding.UTF8.GetString(buffer).Contains("client up"))
+                        {
+                            lastHeardFrom = DateTime.Now;
+                        }
+                    }
+                    if (DateTime.Now - lastHeardFrom > TimeSpan.FromSeconds(5))
+                    {
+                        break;
+                    }
                 }
 
-                await webSocket.CloseAsync(
-                    receiveResult.CloseStatus.Value,
-                    receiveResult.CloseStatusDescription,
-                CancellationToken.None);
-
+                await webSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "Connection terminated by client", CancellationToken.None);
+                Console.WriteLine($"{camera.IPAddress} WS connection closed");
             }
             catch (Exception e) 
             {

@@ -21,6 +21,10 @@ export default class CameraThumbnail extends Component {
 
     }
 
+    sendClientUp(){
+        this.ws.send(JSON.stringify({ data: 'client up' }));
+    }
+
     reopenWS() {
         this.setState({ alt: this.state.messageAlts.connecting });
         this.ws = new WebSocket(this.state.wsSource);
@@ -33,13 +37,14 @@ export default class CameraThumbnail extends Component {
         //console.log(this.state.name + ' ws opened');
         if (this.alt !== this.state.messageAlts.waitingForFrame) {
             this.setState({ alt: this.state.messageAlts.waitingForFrame });
+            this.sendClientUp();
         }
-        this.ws.send(JSON.stringify({ data: 'open' }))
     }
 
     handleWSMessage(e) {
         //console.log(e.data);
         this.setState({frameData: e.data});
+        this.sendClientUp();
     }
 
     handleWSClosed(e) {
