@@ -93,7 +93,10 @@ namespace ActionDetection.API.Controllers
                 CancellationToken.None);
 
             }
-            catch { }
+            catch (Exception e) 
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

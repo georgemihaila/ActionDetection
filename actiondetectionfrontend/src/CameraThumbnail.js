@@ -14,7 +14,6 @@ export default class CameraThumbnail extends Component {
             name: props.name,
             wsSource: `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${props.name.replace('http://', '')}&imageSize=0`,
             motionDetectionChunks: props.motionDetectionChunks,
-            showIP: false,
             messageAlts: messageAlts,
             alt: messageAlts.initial,
             frameData: []
@@ -75,7 +74,6 @@ export default class CameraThumbnail extends Component {
                     width={400}
                     src={`data:image/jpeg;base64,${this.state.frameData}`}
                     alt={this.state.alt} />
-                {(this.state.showIP ? ip : <></>)}
             </div>
         </>;
     }

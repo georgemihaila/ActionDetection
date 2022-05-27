@@ -3,8 +3,9 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-
+using SixLabors.ImageSharp.Drawing.Processing;
 using System.Runtime.Serialization.Formatters.Binary;
+using SixLabors.Fonts;
 
 namespace ActionDetection.API.Infrastructure.Extensions
 {
@@ -76,8 +77,12 @@ namespace ActionDetection.API.Infrastructure.Extensions
                         }
                     }
                 }
-                //return motionImage;
                 frame.Mutate(x => x.DrawImage(motionImage, 0.3f));
+            }
+            if (frame != null)
+            {
+                var font = new TextOptions(SystemFonts.Get("Arial").CreateFont(frame.Height / 20));
+                frame.Mutate(x => x.DrawText(new TextOptions(font), $"{camera.IPAddress}\n{DateTime.Now.ToString("hh:mm:sstt")}", Color.White));
             }
             return frame;
         }
