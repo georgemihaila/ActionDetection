@@ -62,7 +62,7 @@ namespace ActionDetection.API.Controllers
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 if (_cameras.Any(x => x.IPAddress == cameraIP))
                 {
-                    await ServeCameraFrames(webSocket, _cameras.FirstByIPAddress(cameraIP), imageSize, sensitivity, showMotion, chunks);
+                    await ServeCameraFramesAsync(webSocket, _cameras.FirstByIPAddress(cameraIP), imageSize, sensitivity, showMotion, chunks);
                 }
             }
             else
@@ -71,7 +71,7 @@ namespace ActionDetection.API.Controllers
             }
         }
 
-        private static async Task ServeCameraFrames(WebSocket webSocket, Camera camera, ImageSize imageSize, int sensitivity, bool showMotion, int chunks)
+        private static async Task ServeCameraFramesAsync(WebSocket webSocket, Camera camera, ImageSize imageSize, int sensitivity, bool showMotion, int chunks)
         {
             var buffer = new byte[1024 * 4];
             try
@@ -93,7 +93,7 @@ namespace ActionDetection.API.Controllers
                 CancellationToken.None);
 
             }
-            finally { }
+            catch { }
         }
     }
 }

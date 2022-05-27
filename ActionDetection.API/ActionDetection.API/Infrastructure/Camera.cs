@@ -30,7 +30,11 @@ namespace ActionDetection.API.Infrastructure
                 _lastGetFrameTime = DateTime.Now;
                 _loadActive = true;
                 _lastFrame = _currentFrame?.CloneAs<Rgb24>();
-                _currentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg"));
+                Console.WriteLine($"[{DateTime.Now.TimeOfDay.ToString()}] {IPAddress} get frame");
+                var tokenFactory = new CancellationTokenSource();
+                tokenFactory.CancelAfter(1000);
+                var token = tokenFactory.Token;
+                _currentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg", token));
                 _loadActive = false;
             }
             return _currentFrame;

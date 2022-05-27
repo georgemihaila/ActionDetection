@@ -24,10 +24,13 @@ static const char *_STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" 
 static const char *_STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
 static const char *_STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
+#define LED_BUILTIN 4
+
 camera_config_t camConfig;
 
 Camera::Camera()
 {
+    pinMode(LED_BUILTIN, OUTPUT);
     camConfig.ledc_channel = LEDC_CHANNEL_0;
     camConfig.ledc_timer = LEDC_TIMER_0;
     camConfig.pin_d0 = Y2_GPIO_NUM;
@@ -71,6 +74,9 @@ Camera::Camera()
 
 void Camera::respondWithFrame(WebServer *server, framesize_t resolution)
 {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(LED_BUILTIN, LOW);
     camera_fb_t *fb = NULL;
     esp_err_t res = ESP_OK;
     size_t _jpg_buf_len = 0;
