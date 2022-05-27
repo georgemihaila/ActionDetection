@@ -1,5 +1,6 @@
 using ActionDetection.API.Infrastructure;
 using ActionDetection.API.Infrastructure.ObjectDetection;
+using ActionDetection.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<AccesStatsMiddleware>();
 app.UseWebSockets();
 
 app.UseAuthorization();

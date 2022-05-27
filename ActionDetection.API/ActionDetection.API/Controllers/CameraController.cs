@@ -74,21 +74,26 @@ namespace ActionDetection.API.Controllers
         private static async Task ServeCameraFrames(WebSocket webSocket, Camera camera, ImageSize imageSize, int sensitivity, bool showMotion, int chunks)
         {
             var buffer = new byte[1024 * 4];
-            var receiveResult = await webSocket.ReceiveAsync(
-                new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            while (webSocket.State == WebSocketState.Open)
+            try
             {
-                var frame = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity, chunks);
-                await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
-                await Task.Delay(1000);
-                //receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
+                var receiveResult = await webSocket.ReceiveAsync(
+                        new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            await webSocket.CloseAsync(
-                receiveResult.CloseStatus.Value,
-                receiveResult.CloseStatusDescription,
+                while (webSocket.State == WebSocketState.Open)
+                {
+                    var frame = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity, chunks);
+                    await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
+                    await Task.Delay(500);
+                    //receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                }
+
+                await webSocket.CloseAsync(
+                    receiveResult.CloseStatus.Value,
+                    receiveResult.CloseStatusDescription,
                 CancellationToken.None);
+
+            }
+            finally { }
         }
     }
 }
