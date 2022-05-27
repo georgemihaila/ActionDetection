@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using System.Runtime.Serialization.Formatters.Binary;
 using SixLabors.Fonts;
+using System.Runtime.InteropServices;
 
 namespace ActionDetection.API.Infrastructure.Extensions
 {
@@ -49,7 +50,7 @@ namespace ActionDetection.API.Infrastructure.Extensions
         public static async Task<Image> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity, int chunks)
         {
             var lastFrame = camera.GetLastFrame();
-            var frame = (await camera.GetFrameAsync(imageSize)).CloneAs<Rgb24>();
+            var frame = (await camera.GetFrameAsync(imageSize))?.CloneAs<Rgb24>();
             Image<Rgba32> motionImage;
             if (lastFrame != null && frame != null)
             {
@@ -81,6 +82,18 @@ namespace ActionDetection.API.Infrastructure.Extensions
             }
             if (frame != null)
             {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    try
+                    {
+                        SystemFonts.Get("Arial");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Please run\nsudo apt install ttf-mscorefonts-installer\nsudo fc-cache -f");
+                        throw;
+                    }
+                }
                 var font = new TextOptions(SystemFonts.Get("Arial").CreateFont(frame.Height / 20));
                 frame.Mutate(x => x.DrawText(new TextOptions(font), $"{camera.IPAddress}\n{DateTime.Now.ToString("hh:mm:sstt")}", Color.White));
             }
