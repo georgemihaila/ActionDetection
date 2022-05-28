@@ -32,9 +32,12 @@ var inMemoryData = new Hangfire.MemoryStorage.Database.Data();
 var memoryOptions = new MemoryStorageOptions();
 JobStorage.Current = new MemoryStorage(memoryOptions, inMemoryData);
 builder.Services.AddHangfire(x => x.UseMemoryStorage(memoryOptions, inMemoryData));
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(options =>
+{
+    options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
+});
 builder.Services.AddScoped<UpdateCameraFramesPeriodicallyTask>();
-RecurringJob.AddOrUpdate<UpdateCameraFramesPeriodicallyTask>("UpdateCameraFramesPeriodicallyTask", x => x.RunAsync(), CronConstants.Every5s);
+//RecurringJob.AddOrUpdate<UpdateCameraFramesPeriodicallyTask>("UpdateCameraFramesPeriodicallyTask", x => x.RunAsync(), CronConstants.Every5s);
 var app = builder.Build();
 app.UseCors(x => x
                 .AllowAnyMethod()

@@ -14,9 +14,10 @@ namespace ActionDetection.API.Infrastructure.BackgroundTasks
         [AutomaticRetry(Attempts = 1, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public async Task RunAsync()
         {
+            Console.WriteLine("Run");
             var tasks = _cameraCollection.Select(x => Task.Run(async () =>
             {
-               if (DateTime.Now.Subtract(x.CurrentFrameTime) >= TimeSpan.FromSeconds(5))
+               if (DateTime.Now.Subtract(x.CurrentFrameTime) >= TimeSpan.FromSeconds(3))
                 {
                     try
                     {
