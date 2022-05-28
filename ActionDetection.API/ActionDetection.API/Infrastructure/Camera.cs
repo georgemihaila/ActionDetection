@@ -40,6 +40,12 @@ namespace ActionDetection.API.Infrastructure
             return _currentFrame;
         }
 
+        public void SetCurrentFrame(Image frame)
+        {
+            _lastFrame = _currentFrame?.CloneAs<Rgb24>();
+            _currentFrame = frame;
+        }
+
         public Image GetLastFrame() => _lastFrame;
     }
 }

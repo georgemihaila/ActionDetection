@@ -10,12 +10,18 @@
 #include "soc/soc.h"          //disable brownout problems
 #include "soc/rtc_cntl_reg.h" //disable brownout problems
 #include "WebServer.h"
+#include <HTTPClient.h>
 
 class Camera
 {
 public:
     Camera();
     void respondWithFrame(WebServer *server, framesize_t resolution);
+    void postFrame(String address, framesize_t resolution);
+
+private:
+    WiFiClient _client;
+    HTTPClient _http;
 };
 
 #endif

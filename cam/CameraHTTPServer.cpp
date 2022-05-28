@@ -1,7 +1,9 @@
 #include "CameraHTTPServer.h"
+#include "CameraStreamService.h"
 
 WebServer *_server;
 Camera *_csCam;
+CameraStreamService *_csStreamService;
 
 void handleListCapabilities()
 {
@@ -40,16 +42,31 @@ void handleGetQQVGA()
     _csCam->respondWithFrame(_server, FRAMESIZE_QQVGA);
 }
 
+void startStream()
+{
+    _csStreamService->start();
+    _server->send(200, "text/plain", "Stream started");
+}
+
+void stopStream()
+{
+    _csStreamService->stop();
+    _server->send(200, "text/plain", "Stream stopped");
+}
+
 CameraHTTPServer::CameraHTTPServer(Camera *camera, int port)
 {
     _server = new WebServer(port);
     _csCam = camera;
+    _csStreamService = new CameraStreamService(_csCam, "http://10.10.0.157:5219/Camera/SetFrame", FRAMESIZE_VGA, 1);
 
     _server->on("/description.xml", handleSSDP);
     _server->on("/capabilities", handleListCapabilities);
     _server->on("/uxga.jpg", handleGetUXGA);
     _server->on("/vga.jpg", handleGetVGA);
-     _server->on("/qqvga.jpg", handleGetQQVGA);
+    _server->on("/qqvga.jpg", handleGetQQVGA);
+    _server->on("/startStream", startStream);
+    _server->on("/stopStream", stopStream);
     /*_server->on("/setResolution", HTTP_GET, [](AsyncWebServerRequest * request)
     {
 
@@ -69,4 +86,5 @@ CameraHTTPServer::CameraHTTPServer(Camera *camera, int port)
 void CameraHTTPServer::handleClient()
 {
     _server->handleClient();
+    _csStreamService->yield();
 }

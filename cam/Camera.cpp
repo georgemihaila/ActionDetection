@@ -133,3 +133,66 @@ void Camera::respondWithFrame(WebServer *server, framesize_t resolution)
         _jpg_buf = NULL;
     }
 }
+
+void Camera::postFrame(String address, framesize_t resolution)
+{
+    camera_fb_t *fb = NULL;
+    esp_err_t res = ESP_OK;
+    size_t _jpg_buf_len = 0;
+    uint8_t *_jpg_buf = NULL;
+    char *part_buf[64];
+
+    if (camConfig.frame_size != resolution)
+    {
+        esp_camera_deinit();
+        camConfig.frame_size = resolution;
+        esp_camera_init(&camConfig);
+    }
+    fb = esp_camera_fb_get();
+    if (!fb)
+    {
+        Serial.println("Camera capture failed");
+        res = ESP_FAIL;
+    }
+    else
+    {
+        if (fb->format != PIXFORMAT_JPEG)
+        {
+            bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
+            esp_camera_fb_return(fb);
+            fb = NULL;
+            if (!jpeg_converted)
+            {
+                Serial.println("JPEG compression failed");
+                res = ESP_FAIL;
+            }
+        }
+        else
+        {
+            _jpg_buf_len = fb->len;
+            _jpg_buf = fb->buf;
+        }
+    }
+
+    //<actual POST>
+
+    _http.begin(_client, address);
+    _http.addHeader("Content-Type", "image/jpeg");
+    int response = _http.POST(_jpg_buf, _jpg_buf_len);
+    if (response != 200 || response != 201)
+    {
+        Serial.println("POST frame to " + address + " failed with code " + String(response));
+    }
+    //</actual POST>
+    if (fb)
+    {
+        esp_camera_fb_return(fb);
+        fb = NULL;
+        _jpg_buf = NULL;
+    }
+    else if (_jpg_buf)
+    {
+        free(_jpg_buf);
+        _jpg_buf = NULL;
+    }
+}

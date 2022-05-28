@@ -104,10 +104,22 @@ namespace ActionDetection.API.Controllers
                 await webSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "Connection terminated by client", CancellationToken.None);
                 Console.WriteLine($"{camera.IPAddress} WS connection closed");
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+        }
+
+        [HttpPost]
+        public IActionResult SetFrame([FromBody] byte[] bytes)
+        {
+            var image = Image.Load(bytes);
+            var sourceIP = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            if (_cameras.Any(x => x.IPAddress == sourceIP))
+            {
+                _cameras.FirstByIPAddress(sourceIP).SetCurrentFrame(image);
+            }
+            return StatusCode(201);
         }
     }
 }
