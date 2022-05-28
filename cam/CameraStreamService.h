@@ -24,7 +24,7 @@ public:
 private:
     Camera* _camera;
     String _endpointAddress;
-    bool _running;
+    bool _running = false;
     unsigned long _lastSendTimestamp = 0;
 };
 

@@ -79,7 +79,7 @@ namespace ActionDetection.API.Controllers
                 var streamStart = await camera.StartStreamAsync();
                 if (!streamStart)
                 {
-                    throw new Exception("Couldn't start camera stream");
+                    throw new Exception($"Couldn't start {camera.IPAddress} camera stream");
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace ActionDetection.API.Controllers
                 var streamStop = await camera.StopStreamAsync();
                 if (!streamStop)
                 {
-                    throw new Exception("Couldn't stop camera stream");
+                    throw new Exception($"Couldn't stop {camera.IPAddress} camera stream");
                 }
                 else
                 {
