@@ -76,6 +76,15 @@ namespace ActionDetection.API.Controllers
             var buffer = new byte[1024 * 4];
             try
             {
+                var streamStart = await camera.StartStreamAsync();
+                if (!streamStart)
+                {
+                    throw new Exception("Couldn't start camera stream");
+                }
+                else
+                {
+                    Console.WriteLine($"Started {camera.IPAddress} camera stream");
+                }
                 var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
                 var lastHeardFrom = DateTime.Now;
@@ -100,9 +109,17 @@ namespace ActionDetection.API.Controllers
                         break;
                     }
                 }
-
                 await webSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "Connection terminated by client", CancellationToken.None);
                 Console.WriteLine($"{camera.IPAddress} WS connection closed");
+                var streamStop = await camera.StopStreamAsync();
+                if (!streamStop)
+                {
+                    throw new Exception("Couldn't stop camera stream");
+                }
+                else
+                {
+                    Console.WriteLine($"Stopped {camera.IPAddress} camera stream");
+                }
             }
             catch (Exception e)
             {

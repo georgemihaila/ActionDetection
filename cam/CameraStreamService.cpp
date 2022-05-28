@@ -14,9 +14,9 @@ void CameraStreamService::yield()
 {
     if (_running)
     {
-        if (millis() - _lastSendTimestamp >= 1000 / _maxFPS)
+        if (millis() - _lastSendTimestamp >= 1000 / maxFPS)
         {
-            _camera->postFrame(_endpointAddress, _resolution);
+            _camera->postFrame(_endpointAddress, resolution);
             _lastSendTimestamp = millis();
         }
     }

@@ -54,19 +54,68 @@ void stopStream()
     _server->send(200, "text/plain", "Stream stopped");
 }
 
+void streamSize()
+{
+    _server->send(200, "text/plain", String(_csStreamService->resolution));
+}
+
+void return200()
+{
+    _server->send(200, "text/plain", "ok");
+}
+
+void handleStreamUXGA()
+{
+    _csStreamService->resolution = FRAMESIZE_UXGA;
+    return200();
+}
+
+void handleStreamVGA()
+{
+    _csStreamService->resolution = FRAMESIZE_VGA;
+    return200();
+}
+
+void handleStreamQQVGA()
+{
+    _csStreamService->resolution = FRAMESIZE_QQVGA;
+    return200();
+}
+
+void handleStreamLowFPS()
+{
+    _csStreamService->maxFPS = 1;
+    return200();
+}
+
+void handleStreamHighFPS()
+{
+    _csStreamService->maxFPS = 10;
+    return200();
+}
+
 CameraHTTPServer::CameraHTTPServer(Camera *camera, int port)
 {
     _server = new WebServer(port);
     _csCam = camera;
-    _csStreamService = new CameraStreamService(_csCam, "http://10.10.0.157:5219/Camera/SetFrame", FRAMESIZE_VGA, 1);
+    _csStreamService = new CameraStreamService(_csCam, "http://10.10.0.157:5219/Camera/SetFrame", FRAMESIZE_VGA, 3);
 
     _server->on("/description.xml", handleSSDP);
     _server->on("/capabilities", handleListCapabilities);
+
     _server->on("/uxga.jpg", handleGetUXGA);
     _server->on("/vga.jpg", handleGetVGA);
     _server->on("/qqvga.jpg", handleGetQQVGA);
+
     _server->on("/startStream", startStream);
+    _server->on("/streamSize", startStream);
     _server->on("/stopStream", stopStream);
+    _server->on("/streamLowFPS", handleStreamLowFPS);
+    _server->on("/streamHighFPS", handleStreamHighFPS);
+
+    _server->on("/streamuxga", handleStreamUXGA);
+    _server->on("/streamvga", handleStreamVGA);
+    _server->on("/streamqqvga", handleStreamQQVGA);
     /*_server->on("/setResolution", HTTP_GET, [](AsyncWebServerRequest * request)
     {
 

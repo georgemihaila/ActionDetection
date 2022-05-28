@@ -47,10 +47,19 @@ namespace ActionDetection.API.Infrastructure.Extensions
             return source;
         }
 
+        public static Image GetMotionDetectionFrame(this Camera camera, ImageSize imageSize, int sensitivity, int chunks) => GenerateMotionDetectionFrame(camera, imageSize, camera.CurrentFrame, sensitivity, chunks);
+
         public static async Task<Image> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity, int chunks)
         {
-            var lastFrame = camera.GetLastFrame();
-            var frame = (await camera.GetFrameAsync(imageSize))?.CloneAs<Rgb24>();
+            var frame = (await camera.GetFrameAsync(imageSize));
+            return GenerateMotionDetectionFrame(camera, imageSize, frame, sensitivity, chunks);
+        }
+
+        private static Image GenerateMotionDetectionFrame(this Camera camera, ImageSize imageSize, Image? currentFrame, int sensitivity, int chunks)
+        {
+
+            var lastFrame = camera.LastFrame?.CloneAs<Rgb24>();
+            var frame = currentFrame?.CloneAs<Rgb24>();
             Image<Rgba32> motionImage;
             if (lastFrame != null && frame != null)
             {
@@ -58,7 +67,7 @@ namespace ActionDetection.API.Infrastructure.Extensions
                 var c1 = lastFrame.PrepareForMotionDetection(chunks).CloneAs<Rgb24>();
                 motionImage = new Image<Rgba32>(frame.Width, frame.Height);
                 var adjustedChunkWidth = motionImage.Width / chunks;
-                var adjustedChunkHeight= motionImage.Height / chunks;
+                var adjustedChunkHeight = motionImage.Height / chunks;
                 for (int chunkX = 0; chunkX < c0.Width; chunkX++)
                 {
                     for (int chunkY = 0; chunkY < c0.Height; chunkY++)

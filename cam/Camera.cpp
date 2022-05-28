@@ -179,7 +179,7 @@ void Camera::postFrame(String address, framesize_t resolution)
     _http.begin(_client, address);
     _http.addHeader("Content-Type", "x-binary");
     int response = _http.POST(_jpg_buf, _jpg_buf_len);
-    if (response != 200 || response != 201)
+    if (!(response == 200 || response == 201))
     {
         Serial.println("POST frame to " + address + " failed with code " + String(response));
     }

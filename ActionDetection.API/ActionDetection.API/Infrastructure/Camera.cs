@@ -13,8 +13,8 @@ namespace ActionDetection.API.Infrastructure
         public double MaxFrameRate { get; set; } = 3;
 
         private readonly HttpClient _httpClient = new();
-        private Image? _currentFrame;
-        private Image? _lastFrame;
+        public Image? CurrentFrame { get; private set; }
+        public Image? LastFrame { get; private set; }
         private DateTime _lastGetFrameTime = DateTime.MinValue;
         private bool _loadActive = false;
 
@@ -23,29 +23,40 @@ namespace ActionDetection.API.Infrastructure
             IPAddress = ipAddress.Replace("http://", string.Empty);
         }
 
+        /// <summary>
+        /// Returns a camera frame by making a GET request
+        /// </summary>
         public async Task<Image> GetFrameAsync(ImageSize imageSize)
         {
             if ((DateTime.Now - _lastGetFrameTime).TotalSeconds > 1 / MaxFrameRate && !_loadActive)
             {
                 _lastGetFrameTime = DateTime.Now;
                 _loadActive = true;
-                _lastFrame = _currentFrame?.CloneAs<Rgb24>();
+                LastFrame = CurrentFrame?.CloneAs<Rgb24>();
                 Console.WriteLine($"[{DateTime.Now.TimeOfDay.ToString()}] {IPAddress} get frame");
                 var tokenFactory = new CancellationTokenSource();
                 tokenFactory.CancelAfter(1000);
                 var token = tokenFactory.Token;
-                _currentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg", token));
+                CurrentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg", token));
                 _loadActive = false;
             }
-            return _currentFrame;
+            return CurrentFrame;
         }
 
         public void SetCurrentFrame(Image frame)
         {
-            _lastFrame = _currentFrame?.CloneAs<Rgb24>();
-            _currentFrame = frame;
+            LastFrame = CurrentFrame?.CloneAs<Rgb24>();
+            CurrentFrame = frame;
         }
 
-        public Image GetLastFrame() => _lastFrame;
+        public async Task<bool> StartStreamAsync() => await GETPathAndReturnSuccessCodeAsync("startStream");
+
+        public async Task<bool> StopStreamAsync() => await GETPathAndReturnSuccessCodeAsync("stopStream");
+
+        private async Task<bool> GETPathAndReturnSuccessCodeAsync(string path)
+        {
+            var response = await _httpClient.GetAsync($"http://{IPAddress}/{path}");
+            return response.IsSuccessStatusCode;
+        }
     }
 }
