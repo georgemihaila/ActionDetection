@@ -111,9 +111,9 @@ namespace ActionDetection.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetFrame([FromBody] byte[] bytes)
+        public IActionResult SetFrame()
         {
-            var image = Image.Load(bytes);
+            var image = Image.Load(Request.Body);
             var sourceIP = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             if (_cameras.Any(x => x.IPAddress == sourceIP))
             {

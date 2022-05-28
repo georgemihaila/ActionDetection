@@ -177,7 +177,7 @@ void Camera::postFrame(String address, framesize_t resolution)
     //<actual POST>
 
     _http.begin(_client, address);
-    _http.addHeader("Content-Type", "image/jpeg");
+    _http.addHeader("Content-Type", "x-binary");
     int response = _http.POST(_jpg_buf, _jpg_buf_len);
     if (response != 200 || response != 201)
     {
