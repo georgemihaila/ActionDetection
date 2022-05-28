@@ -26,7 +26,7 @@ namespace ActionDetection.API.Infrastructure
         /// <summary>
         /// Returns a camera frame by making a GET request
         /// </summary>
-        public async Task<Image> GetFrameAsync(ImageSize imageSize)
+        public async Task<Image?> GetFrameAsync(ImageSize imageSize)
         {
             if ((DateTime.Now - _lastGetFrameTime).TotalSeconds > 1 / MaxFrameRate && !_loadActive)
             {
@@ -52,6 +52,12 @@ namespace ActionDetection.API.Infrastructure
         public async Task<bool> StartStreamAsync() => await GETPathAndReturnSuccessCodeAsync("startStream");
 
         public async Task<bool> StopStreamAsync() => await GETPathAndReturnSuccessCodeAsync("stopStream");
+
+        public async Task<bool> SetStreamResolution(ImageSize imageSize)
+        {
+            var response = await _httpClient.GetAsync($"http://{IPAddress}/handleStream{imageSize.ToString().ToUpper()}");
+            return response.IsSuccessStatusCode;
+}
 
         private async Task<bool> GETPathAndReturnSuccessCodeAsync(string path)
         {

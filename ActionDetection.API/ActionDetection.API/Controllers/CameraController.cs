@@ -84,13 +84,15 @@ namespace ActionDetection.API.Controllers
                 else
                 {
                     Console.WriteLine($"Started {camera.IPAddress} camera stream");
+                    var setResolutionResponse = await camera.SetStreamResolution(imageSize);
+                    Console.WriteLine($"Set {camera.IPAddress} resolution success: " + setResolutionResponse);
                 }
                 var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
                 var lastHeardFrom = DateTime.Now;
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    var frame = camera.GetMotionDetectionFrame(imageSize, sensitivity, chunks);
+                    var frame = camera.GetMotionDetectionFrame(sensitivity, chunks);
                     if (frame != null)
                     {
                         await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
