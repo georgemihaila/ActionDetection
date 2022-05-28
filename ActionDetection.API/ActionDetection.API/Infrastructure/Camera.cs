@@ -53,15 +53,13 @@ namespace ActionDetection.API.Infrastructure
 
         public async Task<bool> StopStreamAsync() => await GETPathAndReturnSuccessCodeAsync("stopStream");
 
-        public async Task<bool> SetStreamResolution(ImageSize imageSize)
-        {
-            var response = await _httpClient.GetAsync($"http://{IPAddress}/handleStream{imageSize.ToString().ToUpper()}");
-            return response.IsSuccessStatusCode;
-}
+        public async Task<bool> SetStreamResolution(ImageSize imageSize) => await GETPathAndReturnSuccessCodeAsync($"stream{imageSize.ToString().ToLower()}");
 
         private async Task<bool> GETPathAndReturnSuccessCodeAsync(string path)
         {
-            var response = await _httpClient.GetAsync($"http://{IPAddress}/{path}");
+            var url = $"http://{IPAddress}/{path}";
+            var response = await _httpClient.GetAsync(url);
+            Console.WriteLine($"GET {url}: {response.StatusCode}");
             return response.IsSuccessStatusCode;
         }
     }
