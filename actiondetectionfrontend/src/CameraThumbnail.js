@@ -25,7 +25,7 @@ export default class CameraThumbnail extends Component {
     }
 
     getWSURL() {
-        return `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0`;
+        return `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0&chunks=${this.state.motionDetectionChunks}`;
     }
 
     reopenWS() {
@@ -69,6 +69,8 @@ export default class CameraThumbnail extends Component {
         }
         if (this.state.motionDetectionChunks !== this.props.motionDetectionChunks) {
             this.setState({ motionDetectionChunks: this.props.motionDetectionChunks });
+            this.ws.close();
+            console.log(this.state.motionDetectionChunks)
         }
     }
 

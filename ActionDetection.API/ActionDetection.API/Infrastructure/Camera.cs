@@ -15,6 +15,7 @@ namespace ActionDetection.API.Infrastructure
         private readonly HttpClient _httpClient = new();
         public Image? CurrentFrame { get; private set; }
         public DateTime CurrentFrameTime { get; private set; } = DateTime.MinValue;
+        public bool IsStreaming { get; private set; } = false;
         public Image? LastFrame { get; private set; }
         private DateTime _lastGetFrameTime = DateTime.MinValue;
         private bool _loadActive = false;
@@ -52,9 +53,17 @@ namespace ActionDetection.API.Infrastructure
             CurrentFrameTime = DateTime.Now;
         }
 
-        public async Task<bool> StartStreamAsync() => await GETPathAndReturnSuccessCodeAsync("startStream");
+        public async Task<bool> StartStreamAsync()
+        {
+            IsStreaming = true;
+            return await GETPathAndReturnSuccessCodeAsync("startStream");
+        }
 
-        public async Task<bool> StopStreamAsync() => await GETPathAndReturnSuccessCodeAsync("stopStream");
+        public async Task<bool> StopStreamAsync()
+        {
+            IsStreaming = false;
+            return await GETPathAndReturnSuccessCodeAsync("stopStream");
+        }
 
         public async Task<bool> SetStreamResolutionAsync(ImageSize imageSize) => await GETPathAndReturnSuccessCodeAsync($"stream{imageSize.ToString().ToLower()}");
 

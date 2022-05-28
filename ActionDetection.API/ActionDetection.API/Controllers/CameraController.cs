@@ -76,21 +76,17 @@ namespace ActionDetection.API.Controllers
             var buffer = new byte[1024 * 4];
             try
             {
-                var streamStart = await camera.StartStreamAsync();
-                if (!streamStart)
-                {
-                    throw new Exception($"Couldn't start {camera.IPAddress} camera stream");
-                }
-                else
-                {
-                    var setResolutionResponse = await camera.SetStreamResolutionAsync(imageSize);
-                    var setFPSResponse = await camera.SetLowFPSAsync();
-                }
+                var setResolutionResponse = await camera.SetStreamResolutionAsync(imageSize);
+                var setFPSResponse = await camera.SetLowFPSAsync();
                 var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
                 var lastHeardFrom = DateTime.Now;
                 while (webSocket.State == WebSocketState.Open)
                 {
+                    if (!camera.IsStreaming)
+                    {
+                        await camera.StartStreamAsync();
+                    }
                     var frame = camera.GetMotionDetectionFrame(sensitivity, chunks);
                     if (frame != null)
                     {
