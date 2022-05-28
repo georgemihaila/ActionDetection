@@ -2,6 +2,8 @@ using ActionDetection.API.Infrastructure;
 using ActionDetection.API.Infrastructure.ObjectDetection;
 using ActionDetection.API.Middlewares;
 
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +15,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ObjectDetectionService>();
 var cameras = builder.Configuration.GetSection("Cameras").GetChildren().Select(x => new Camera(x.Value)).ToArray();
 builder.Services.AddSingleton(new CameraCollection(cameras));
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.AllowSynchronousIO = true;
+});
+
 var app = builder.Build();
 app.UseCors(x => x
                 .AllowAnyMethod()
