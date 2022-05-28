@@ -2,6 +2,7 @@ import { React, Component } from "react";
 import { globalCameraAPI, apiAddress } from "./services/globals"
 import { Slider } from "@mui/material";
 import { Typography } from "@mui/material";
+import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 
 export default class FloatingSettingsBar extends Component {
 
@@ -41,7 +42,7 @@ export default class FloatingSettingsBar extends Component {
                 </Typography>
                 <Slider
                     aria-label="Motion chunks"
-                    defaultValue={16}
+                    defaultValue={34}
                     getAriaValueText={this.valuetext}
                     valueLabelDisplay="auto"
                     step={10}
@@ -51,6 +52,9 @@ export default class FloatingSettingsBar extends Component {
                     width={100}
                     onChange={this.motionDetectionSliderChanged.bind(this)}
                 />
+                <FormGroup>
+                    <FormControlLabel control={<Checkbox defaultChecked />} label="Motion detection" />
+                </FormGroup>
             </div>
         </>;
     }
