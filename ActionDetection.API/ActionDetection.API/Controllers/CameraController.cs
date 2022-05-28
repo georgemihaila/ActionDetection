@@ -83,9 +83,8 @@ namespace ActionDetection.API.Controllers
                 }
                 else
                 {
-                    Console.WriteLine($"Started {camera.IPAddress} camera stream");
-                    var setResolutionResponse = await camera.SetStreamResolution(imageSize);
-                    Console.WriteLine($"Set {camera.IPAddress} resolution success: " + setResolutionResponse);
+                    var setResolutionResponse = await camera.SetStreamResolutionAsync(imageSize);
+                    var setFPSResponse = await camera.SetLowFPSAsync();
                 }
                 var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
@@ -120,10 +119,6 @@ namespace ActionDetection.API.Controllers
                 if (!streamStop)
                 {
                     throw new Exception($"Couldn't stop {camera.IPAddress} camera stream");
-                }
-                else
-                {
-                    Console.WriteLine($"Stopped {camera.IPAddress} camera stream");
                 }
             }
             catch (Exception e)

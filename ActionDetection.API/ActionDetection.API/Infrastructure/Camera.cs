@@ -53,7 +53,10 @@ namespace ActionDetection.API.Infrastructure
 
         public async Task<bool> StopStreamAsync() => await GETPathAndReturnSuccessCodeAsync("stopStream");
 
-        public async Task<bool> SetStreamResolution(ImageSize imageSize) => await GETPathAndReturnSuccessCodeAsync($"stream{imageSize.ToString().ToLower()}");
+        public async Task<bool> SetStreamResolutionAsync(ImageSize imageSize) => await GETPathAndReturnSuccessCodeAsync($"stream{imageSize.ToString().ToLower()}");
+
+        public async Task<bool> SetLowFPSAsync() => await GETPathAndReturnSuccessCodeAsync("streamLowFPS");
+        public async Task<bool> SetHighFPSAsync() => await GETPathAndReturnSuccessCodeAsync("streamHighFPS");
 
         private async Task<bool> GETPathAndReturnSuccessCodeAsync(string path)
         {

@@ -12,7 +12,7 @@ export default class CameraThumbnail extends Component {
         };
         this.state = {
             name: props.name,
-            wsSource: `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${props.name.replace('http://', '')}&imageSize=1`,
+            wsSource: `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${props.name.replace('http://', '')}&imageSize=0`,
             motionDetectionChunks: props.motionDetectionChunks,
             messageAlts: messageAlts,
             alt: messageAlts.initial,
