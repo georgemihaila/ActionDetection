@@ -91,7 +91,10 @@ namespace ActionDetection.API.Controllers
                 while (webSocket.State == WebSocketState.Open)
                 {
                     var frame = camera.GetMotionDetectionFrame(imageSize, sensitivity, chunks);
-                    await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
+                    if (frame != null)
+                    {
+                        await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
+                    }
                     await Task.Delay(500);
 
                     CancellationTokenSource source = new();

@@ -47,15 +47,15 @@ namespace ActionDetection.API.Infrastructure.Extensions
             return source;
         }
 
-        public static Image GetMotionDetectionFrame(this Camera camera, ImageSize imageSize, int sensitivity, int chunks) => GenerateMotionDetectionFrame(camera, imageSize, camera.CurrentFrame, sensitivity, chunks);
+        public static Image? GetMotionDetectionFrame(this Camera camera, ImageSize imageSize, int sensitivity, int chunks) => GenerateMotionDetectionFrame(camera, imageSize, camera.CurrentFrame, sensitivity, chunks);
 
-        public static async Task<Image> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity, int chunks)
+        public static async Task<Image?> GetMotionDetectionFrameAsync(this Camera camera, ImageSize imageSize, int sensitivity, int chunks)
         {
             var frame = (await camera.GetFrameAsync(imageSize));
             return GenerateMotionDetectionFrame(camera, imageSize, frame, sensitivity, chunks);
         }
 
-        private static Image GenerateMotionDetectionFrame(this Camera camera, ImageSize imageSize, Image? currentFrame, int sensitivity, int chunks)
+        private static Image? GenerateMotionDetectionFrame(this Camera camera, ImageSize imageSize, Image? currentFrame, int sensitivity, int chunks)
         {
 
             var lastFrame = camera.LastFrame?.CloneAs<Rgb24>();
