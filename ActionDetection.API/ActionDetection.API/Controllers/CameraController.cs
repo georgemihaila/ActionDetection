@@ -90,7 +90,7 @@ namespace ActionDetection.API.Controllers
                 var lastHeardFrom = DateTime.Now;
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    var frame = await camera.GetMotionDetectionFrameAsync(imageSize, sensitivity, chunks);
+                    var frame = camera.GetMotionDetectionFrame(imageSize, sensitivity, chunks);
                     await webSocket.SendAsync(Encoding.UTF8.GetBytes(Convert.ToBase64String(frame.ToByteArray())), WebSocketMessageType.Text, true, CancellationToken.None);
                     await Task.Delay(500);
 
@@ -131,10 +131,17 @@ namespace ActionDetection.API.Controllers
         public IActionResult SetFrame()
         {
             var image = Image.Load(Request.Body);
-            var sourceIP = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-            if (_cameras.Any(x => x.IPAddress == sourceIP))
+            var sourceIP = Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+            if (sourceIP != null)
             {
-                _cameras.FirstByIPAddress(sourceIP).SetCurrentFrame(image);
+                if (_cameras.Any(x => x.IPAddress == sourceIP))
+                {
+                    _cameras.FirstByIPAddress(sourceIP).SetCurrentFrame(image);
+                }
+            }
+            else
+            {
+                return BadRequest("No IP address");
             }
             return StatusCode(201);
         }
