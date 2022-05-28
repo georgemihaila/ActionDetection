@@ -14,6 +14,7 @@ namespace ActionDetection.API.Infrastructure
 
         private readonly HttpClient _httpClient = new();
         public Image? CurrentFrame { get; private set; }
+        public DateTime CurrentFrameTime { get; private set; } = DateTime.MinValue;
         public Image? LastFrame { get; private set; }
         private DateTime _lastGetFrameTime = DateTime.MinValue;
         private bool _loadActive = false;
@@ -38,6 +39,7 @@ namespace ActionDetection.API.Infrastructure
                 tokenFactory.CancelAfter(1000);
                 var token = tokenFactory.Token;
                 CurrentFrame = Image.Load(await _httpClient.GetStreamAsync($"http://{IPAddress}/{imageSize.ToString().ToLower()}.jpg", token));
+                CurrentFrameTime = DateTime.Now;
                 _loadActive = false;
             }
             return CurrentFrame;
@@ -47,6 +49,7 @@ namespace ActionDetection.API.Infrastructure
         {
             LastFrame = CurrentFrame?.CloneAs<Rgb24>();
             CurrentFrame = frame;
+            CurrentFrameTime = DateTime.Now;
         }
 
         public async Task<bool> StartStreamAsync() => await GETPathAndReturnSuccessCodeAsync("startStream");

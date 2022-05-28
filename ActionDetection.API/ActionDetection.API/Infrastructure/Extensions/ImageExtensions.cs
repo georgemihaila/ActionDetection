@@ -104,7 +104,7 @@ namespace ActionDetection.API.Infrastructure.Extensions
                     }
                 }
                 var font = new TextOptions(SystemFonts.Get("Arial").CreateFont(frame.Height / 20));
-                frame.Mutate(x => x.DrawText(new TextOptions(font), $"{camera.IPAddress}\n{DateTime.Now.ToString("hh:mm:sstt")}", Color.White));
+                frame.Mutate(x => x.DrawText(new TextOptions(font), $"{camera.IPAddress}\n{DateTime.Now.ToString("hh:mm:sstt")} (+{DateTime.Now.Subtract(camera.CurrentFrameTime).TotalSeconds}s)", Color.White));
             }
             return frame;
         }

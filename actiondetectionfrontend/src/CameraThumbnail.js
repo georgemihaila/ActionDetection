@@ -12,7 +12,6 @@ export default class CameraThumbnail extends Component {
         };
         this.state = {
             name: props.name,
-            wsSource: `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${props.name.replace('http://', '')}&imageSize=0`,
             motionDetectionChunks: props.motionDetectionChunks,
             messageAlts: messageAlts,
             alt: messageAlts.initial,
@@ -21,13 +20,17 @@ export default class CameraThumbnail extends Component {
 
     }
 
-    sendClientUp(){
+    sendClientUp() {
         this.ws.send(JSON.stringify({ data: 'client up' }));
+    }
+
+    getWSURL() {
+        return `${apiAddress.replace("http://", "ws://")}/Camera/FrameSubscription?cameraIP=${this.state.name.replace('http://', '')}&imageSize=0`;
     }
 
     reopenWS() {
         this.setState({ alt: this.state.messageAlts.connecting });
-        this.ws = new WebSocket(this.state.wsSource);
+        this.ws = new WebSocket(this.getWSURL());
         this.ws.onopen = this.handleWSOpened.bind(this);
         this.ws.onmessage = this.handleWSMessage.bind(this);
         this.ws.onclose = this.handleWSClosed.bind(this);
@@ -43,7 +46,7 @@ export default class CameraThumbnail extends Component {
 
     handleWSMessage(e) {
         //console.log(e.data);
-        this.setState({frameData: e.data});
+        this.setState({ frameData: e.data });
         this.sendClientUp();
     }
 
